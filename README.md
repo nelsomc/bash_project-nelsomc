@@ -21,3 +21,7 @@
     -s COLUMN        Sort the CSV data by the specified COLUMN
     -a COLUMN        Calculate the average of numerical column
     -h               Display this help message
+```
+
+## Recources
+- **Link to kaggle where I got the csv file:** https://www.kaggle.com/datasets/abdulszz/spotify-most-streamed-songs
