@@ -76,8 +76,19 @@ if [[ -z "$FILE" ]]; then
 fi
 
 if [[ -n "$filter_column" && -n "$filter_value" ]]; then
-    echo "Filtering rows where column '$filter_column' equals '$filter_value':"
-    awk -F, -v col="$filter_column" -v val="$filter_value" 'NR==1 {for (i=1;i<=NF;i++) if ($i==col) col_num=i} NR>1 {if ($col_num==val) print $0}' "$file"
+    col_num=$(awk -F, 'NR==1 {for (i=1;i<=NF;i++) if ($i=="'"$filter_column"'") print i}' "$FILE")
+    if [[ -z "$col_num" ]]; then
+        echo "Error: Column '$filter_column' not found in the CSV file."
+        exit 1
+    else
+        echo "Filtering rows where column '$filter_column' equals '$filter_value':"
+        result=$(awk -F, -v col="$filter_column" -v val="$filter_value" 'NR==1 {for (i=1;i<=NF;i++) if ($i==col) col_num=i} NR>1 {if ($col_num==val) print $0}' "$FILE")
+        if [[ -z "$result" ]]; then
+            echo "No rows found matching column '$filter_column' with value '$filter_value'."
+        else
+            echo "$result"
+        fi
+    fi
 fi
 
 if [[ -n "$sort_column" ]]; then
